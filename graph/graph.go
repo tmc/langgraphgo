@@ -101,11 +101,17 @@ func (g *MessageGraph) Compile() (*Runnable, error) {
 
 // Invoke executes the compiled message graph with the given input messages.
 // It returns the resulting messages and an error if any occurs during the execution.
+// Invoke executes the compiled message graph with the given input messages.
+// It returns the resulting messages and an error if any occurs during the execution.
 func (r *Runnable) Invoke(ctx context.Context, messages []llms.MessageContent) ([]llms.MessageContent, error) {
 	state := messages
 	currentNode := r.graph.entryPoint
 
 	for {
+		if currentNode == END {
+			break
+		}
+
 		node, ok := r.graph.nodes[currentNode]
 		if !ok {
 			return nil, fmt.Errorf("%w: %s", ErrNodeNotFound, currentNode)
@@ -115,10 +121,6 @@ func (r *Runnable) Invoke(ctx context.Context, messages []llms.MessageContent) (
 		state, err = node.Function(ctx, state)
 		if err != nil {
 			return nil, fmt.Errorf("error in node %s: %w", currentNode, err)
-		}
-
-		if currentNode == END {
-			break
 		}
 
 		foundNext := false
