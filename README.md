@@ -9,7 +9,19 @@
 This is a simple example of how to use the library to create a simple chatbot that uses OpenAI to generate responses.
 
 ```go
-func ExampleMessageGraph() {
+import (
+	"context"
+	"errors"
+	"fmt"
+	"testing"
+
+	"github.com/tmc/langchaingo/llms"
+	"github.com/tmc/langchaingo/llms/openai"
+	"github.com/tmc/langchaingo/schema"
+	"github.com/tmc/langgraphgo/graph"
+)
+
+func main() {
 	model, err := openai.New()
 	if err != nil {
 		panic(err)
