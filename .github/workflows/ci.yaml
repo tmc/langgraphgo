@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v4
+        with:
+          go-version: stable
+          # Cache is managed by golangci-lint
+          # https://github.com/actions/setup-go#caching-dependency-files-and-build-outputs
+          cache: false
+      - uses: actions/checkout@v3
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3.7.0
+        with:
+          args: --timeout=4m
+          version: v1.57.1
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v4
+        with:
+          go-version: stable
+      - uses: actions/checkout@v3
+      - name: Build
+        run: go build -v ./...
+      - name: Run tests with coverage
+        run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4-beta
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
