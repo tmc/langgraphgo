@@ -47,6 +47,3 @@ linters-settings:
         ignore-file-rules:
           - "**/*_test.go"
           - "**/mock/**/*.go"
-run:
-  skip-dirs:
-    - 'exp'
