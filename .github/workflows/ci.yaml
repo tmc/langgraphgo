@@ -26,6 +26,7 @@ jobs:
           version: v1.57.1
   build-test:
     runs-on: ubuntu-latest
+    environment: ci
     steps:
       - uses: actions/setup-go@v4
         with:
