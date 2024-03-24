@@ -28,7 +28,6 @@ func ExampleMessageGraph() {
 		return append(state,
 			llms.TextParts(schema.ChatMessageTypeAI, r.Choices[0].Content),
 		), nil
-
 	})
 	g.AddNode(graph.END, func(ctx context.Context, state []llms.MessageContent) ([]llms.MessageContent, error) {
 		return state, nil
@@ -58,6 +57,7 @@ func ExampleMessageGraph() {
 }
 
 func TestMessageGraph(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		name           string
 		buildGraph     func() *graph.MessageGraph
@@ -140,7 +140,9 @@ func TestMessageGraph(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			g := tc.buildGraph()
 			runnable, err := g.Compile()
 			if err != nil {
@@ -152,7 +154,7 @@ func TestMessageGraph(t *testing.T) {
 
 			output, err := runnable.Invoke(context.Background(), tc.inputMessages)
 			if err != nil {
-				if tc.expectedError == nil || fmt.Sprint(err) != fmt.Sprint(tc.expectedError) {
+				if tc.expectedError == nil || err.Error() != tc.expectedError.Error() {
 					t.Fatalf("unexpected invoke error: '%v', expected '%v'", err, tc.expectedError)
 				}
 				return
