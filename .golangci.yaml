@@ -1,0 +1,49 @@
+linters:
+  presets:
+    - bugs
+    - comment
+    - complexity
+    - error
+    - format
+    - import
+    - metalinter
+    - module
+    - performance
+    - sql
+    - style
+    - test
+    - unused
+  disable:
+    - godox # We allow TODO lines.
+    - tagliatelle # As we're dealing with third parties we must accept snake case.
+    - wsl # We don't agree with wsl's style rules
+    - exhaustruct
+    - lll
+    - varnamelen
+    - nlreturn
+    - gomnd
+    - goerr113
+    - wrapcheck # TODO: we should probably enable this one (at least for new code).
+    - testpackage
+    - nolintlint # see https://github.com/golangci/golangci-lint/issues/3228.
+    - depguard # disabling temporarily
+    - ireturn # disabling temporarily
+
+linters-settings:
+  cyclop:
+    max-complexity: 12
+  funlen:
+    lines: 120
+  depguard:
+    list-type: denylist
+    packages:
+      - github.com/samber/lo # Use exp packages or internal utilities instead.
+    additional-guards:
+      - list-type: denylist
+        include-go-root: false
+        packages:
+          - github.com/stretchr/testify
+        # Specify rules by which the linter ignores certain files for consideration.
+        ignore-file-rules:
+          - "**/*_test.go"
+          - "**/mock/**/*.go"
