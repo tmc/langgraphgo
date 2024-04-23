@@ -2,7 +2,7 @@ module github.com/tmc/langgraphgo
 
 go 1.22
 
-require github.com/tmc/langchaingo v0.1.7
+require github.com/tmc/langchaingo v0.1.9
 
 require (
 	github.com/dlclark/regexp2 v1.10.0 // indirect
